@@ -1,70 +1,114 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React from 'react';
+import { View, Text, Image, FlatList, StyleSheet, Dimensions } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const data = [
+  { id: '1', image: require('../../assets/images/regenschirm.jpg'), title: 'Gelber Regenschirm', types: ['Wetterschutz'], price: 27, stars: 4.5, reviews: 139, description: "Gelber Regenschirm, um den Regen abzuhalten. Am besten zu benutzen an Regentagen." },
+  { id: '2', image: require('../../assets/images/hoodie.webp'), title: 'Grauer Hoodie', types: ['Kleidung','Hoodies'], price: 59, stars: 4.2, reviews: 357, description: "Grössen: XS, S, M, XL, XXL\nStoff: Baumwolle" },
+  { id: '3', image: require('../../assets/images/skelett.jpg'), title: 'Halloween Skelett', types: ['Kostüm',"Dekorationen"], price: 40, stars: 4.2, reviews: 7, description: "Skelett für Halloween" },
+  { id: '4', image: require('../../assets/images/natel.jpg'), title: 'Samsung Galaxy A55', types: ['Smartphone'], price: 321, stars: 4.4, reviews: 408, description: "256 GB, Grau, 6.6\", 5G, 50 Mpx" },
+  { id: '5', image: require('../../assets/images/mystery-book.jpg'), title: 'Mysteriöses Buch', types: ['Bücher'], price: 642, stars: 5.0, reviews: 0, description: "Mysteriöses Buch, unbekannte Herkunft" },
+  { id: '6', image: require('../../assets/images/Zelda-dnd.webp'), title: 'Zelda D&D-Würfel', types: ['D&D'], price: 69, stars: 4.6, reviews: 1100, description: "Würfel-Set, Grün mit Triforce" },
+];
 
-export default function HomeScreen() {
+// Hier werden die Sterne von Zahlen in Zeichen umgewandelt. Evtl bisschen unnötig.
+const renderStars = (stars) => {
+  const fullStars = Math.floor(stars);
+  const halfStar = stars - fullStars >= 0.5 ? 1 : 0;
+  const emptyStars = 5 - fullStars - halfStar;
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <View style={styles.starContainer}>
+      {Array(fullStars).fill(<Text style={styles.star}>★</Text>)}
+      {halfStar ? <Text style={styles.star}>☆</Text> : null}
+      {Array(emptyStars).fill(<Text style={styles.star}>✩</Text>)}
+    </View>
   );
-}
+};
+
+const MainPage = () => {
+  const renderItem = ({ item }) => (
+    <View style={styles.itemContainer}>
+      <Image source={item.image} style={styles.image} />
+      <Text style={styles.title}>{item.title}</Text>
+      <Text style={styles.type}>{item.types.join(', ')}</Text>
+      <Text style={styles.price}>CHF {item.price}.-</Text>
+      <View style={styles.infoContainer}>  
+        {renderStars(item.stars)}
+        <Text style={styles.reviews}>({item.reviews})</Text>
+      </View>
+      <Text style={styles.description}>{item.description}</Text>
+    </View>
+  );
+
+  return (
+    <FlatList
+      data={data}
+      renderItem={renderItem}
+      keyExtractor={item => item.id}
+      numColumns={1}
+      contentContainerStyle={styles.listContainer}
+    />
+  );
+};
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  listContainer: {
+    padding: 10,
+  },
+  itemContainer: {
+    margin: 8,
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  // Die Bilder. Die Höhe ist nicht ganz 100%, so dass mehrere Items Platz haben.
+  image: {
+    width: '100%',
+    height: Dimensions.get('window').width / 1.5,
+    resizeMode: 'contain',
+    marginBottom: 10,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  price: {
+    fontSize: 20,
+    color: '#C00',
+    marginBottom: 4,
+  },
+  infoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    marginBottom: 4,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  type: {
+    fontSize: 12,
+    color: '#00f',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  starContainer: {
+    flexDirection: 'row',
+    marginLeft: 6,
+  },
+  star: {
+    fontSize: 18,
+    color: '#FFD700',
+  },
+  reviews: {
+    fontSize: 14,
+    color: '#666',
+    marginLeft: 4,
+  },
+  description: {
+    fontSize: 12,
+    color: '#666',
   },
 });
+
+export default MainPage
