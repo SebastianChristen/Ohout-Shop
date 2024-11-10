@@ -1,43 +1,34 @@
 import React from 'react';
-import { View, Text, Image, FlatList, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, Image, FlatList, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native'; // Importiere den Navigation Hook
 
 const data = [
-  { id: '1', image: require('../../assets/images/regenschirm.jpg'), title: 'Gelber Regenschirm', types: ['Wetterschutz'], price: 27, stars: 4.5, reviews: 139, description: "Gelber Regenschirm, um den Regen abzuhalten. Am besten zu benutzen an Regentagen." },
-  { id: '2', image: require('../../assets/images/hoodie.webp'), title: 'Grauer Hoodie', types: ['Kleidung','Hoodies'], price: 59, stars: 4.2, reviews: 357, description: "Grössen: XS, S, M, XL, XXL\nStoff: Baumwolle" },
-  { id: '3', image: require('../../assets/images/skelett.jpg'), title: 'Halloween Skelett', types: ['Kostüm',"Dekorationen"], price: 40, stars: 4.2, reviews: 7, description: "Skelett für Halloween" },
-  { id: '4', image: require('../../assets/images/natel.jpg'), title: 'Samsung Galaxy A55', types: ['Smartphone'], price: 321, stars: 4.4, reviews: 408, description: "256 GB, Grau, 6.6\", 5G, 50 Mpx" },
-  { id: '5', image: require('../../assets/images/mystery-book.jpg'), title: 'Mysteriöses Buch', types: ['Bücher'], price: 642, stars: 5.0, reviews: 0, description: "Mysteriöses Buch, unbekannte Herkunft" },
-  { id: '6', image: require('../../assets/images/Zelda-dnd.webp'), title: 'Zelda D&D-Würfel', types: ['D&D'], price: 69, stars: 4.6, reviews: 1100, description: "Würfel-Set, Grün mit Triforce" },
+  { id: '1', image: require('../../assets/images/regenschirm.jpg'), title: 'Gelber Regenschirm', types: ['Wetterschutz'], price: 27, stars: "★★★★☆", reviews: 139, description: "Gelber Regenschirm, um den Regen abzuhalten. Am besten zu benutzen an Regentagen." },
+  { id: '2', image: require('../../assets/images/hoodie.webp'), title: 'Grauer Hoodie', types: ['Kleidung','Hoodies'], price: 59, stars: "★★★★☆", reviews: 357, description: "Grössen: XS, S, M, XL, XXL\nStoff: Baumwolle" },
+  { id: '3', image: require('../../assets/images/skelett.jpg'), title: 'Timberbone Skelett', types: ['Kostüm',"Dekorationen"], price: 40, stars: "★★★★✩", reviews: 7, description: "Skelett nach Abbild des berühmten Youtubers 'Timberbone'" },
+  { id: '4', image: require('../../assets/images/natel.jpg'), title: 'Samsung Galaxy A55', types: ['Smartphone'], price: 321, stars: "★★★★☆", reviews: 408, description: "256 GB, Grau, 6.6\", 5G, 50 Mpx" },
+  { id: '5', image: require('../../assets/images/mystery-book.jpg'), title: 'Mysteriöses Buch', types: ['Bücher'], price: 642, stars: "★★★★★", reviews: 0, description: "Mysteriöses Buch, unbekannte Herkunft" },
+  { id: '6', image: require('../../assets/images/Zelda-dnd.webp'), title: 'Zelda D&D-Würfel', types: ['D&D'], price: 69, stars: "★★★★☆", reviews: 1100, description: "Würfel-Set, Grün mit Triforce" },
 ];
 
-// Hier werden die Sterne von Zahlen in Zeichen umgewandelt. Evtl bisschen unnötig.
-const renderStars = (stars) => {
-  const fullStars = Math.floor(stars);
-  const halfStar = stars - fullStars >= 0.5 ? 1 : 0;
-  const emptyStars = 5 - fullStars - halfStar;
-
-  return (
-    <View style={styles.starContainer}>
-      {Array(fullStars).fill(<Text style={styles.star}>★</Text>)}
-      {halfStar ? <Text style={styles.star}>☆</Text> : null}
-      {Array(emptyStars).fill(<Text style={styles.star}>✩</Text>)}
-    </View>
-  );
-};
-
 const MainPage = () => {
+  const navigation = useNavigation(); // Navigation Hook
+
+  // Weiterleiten zur Produktdetail-Seite. Gibt jeweils das gesamte Produkt mit.
+  const handlePress = (item) => {
+    navigation.navigate('ProductDetails', { item });
+  };
+
   const renderItem = ({ item }) => (
-    <View style={styles.itemContainer}>
+    <TouchableOpacity onPress={() => handlePress(item)} style={styles.itemContainer}>
       <Image source={item.image} style={styles.image} />
       <Text style={styles.title}>{item.title}</Text>
       <Text style={styles.type}>{item.types.join(', ')}</Text>
       <Text style={styles.price}>CHF {item.price}.-</Text>
-      <View style={styles.infoContainer}>  
-        {renderStars(item.stars)}
-        <Text style={styles.reviews}>({item.reviews})</Text>
-      </View>
+      <Text style={styles.star}> {item.stars}</Text>
+      <Text style={styles.reviews}>{item.reviews} Bewertungen</Text>  
       <Text style={styles.description}>{item.description}</Text>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -51,6 +42,7 @@ const MainPage = () => {
   );
 };
 
+// Hier alles CSS
 const styles = StyleSheet.create({
   listContainer: {
     padding: 10,
@@ -83,18 +75,9 @@ const styles = StyleSheet.create({
     color: '#C00',
     marginBottom: 4,
   },
-  infoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
   type: {
     fontSize: 12,
     color: '#00f',
-  },
-  starContainer: {
-    flexDirection: 'row',
-    marginLeft: 6,
   },
   star: {
     fontSize: 18,
@@ -111,4 +94,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MainPage
+export default MainPage;
