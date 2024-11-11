@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 120},
   header: {
+    paddingTop: 20,
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
@@ -112,8 +113,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   image: {
-    width: 80,
-    height: 80,
+    width: 60,
+    height: 60,
     borderRadius: 20,
   },
   searchContainer: {
@@ -131,6 +132,6 @@ const styles = StyleSheet.create({
     width: 90,
   },
   iconContainer: {
-    padding: 20,
+    padding: 10,
   },
 });
