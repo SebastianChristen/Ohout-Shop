@@ -12,6 +12,7 @@ import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
+import { useNavigation } from "@react-navigation/native";
 
 export default function TaskList() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -19,6 +20,13 @@ export default function TaskList() {
   const handleSearchChange = (text) => {
     setSearchQuery(text);
   };
+
+  const navigation = useNavigation();
+
+  const loginHandler = () => {
+    navigation.navigate('LoginPage');
+  };
+
 
   const handleSearchSubmit = () => {
     console.log("Suchanfrage:", searchQuery);
