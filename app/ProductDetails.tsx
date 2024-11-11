@@ -1,11 +1,28 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Button } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, Button, Alert } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProductDetails = () => {
   const route = useRoute(); // Zugriff auf die Route, um die übergebene Produktdaten zu erhalten
   const navigation = useNavigation();
   const { item } = route.params; // Produktdaten, die von der MainPage übergeben wurden. Parameter
+
+  async function addToShoppingCart(item) {
+    try {
+      // Der bisherige Warenkorb
+      const jsonCart = await AsyncStorage.getItem('shoppingCart');
+      let cartItems = jsonCart != null ? JSON.parse(jsonCart) : [];
+
+      // Hinzufügen zum JSON
+      cartItems.push(item);
+      await AsyncStorage.setItem('shoppingCart', JSON.stringify(cartItems));
+
+      Alert.alert("Hinzugefügt", "Das Produkt wurde dem Warenkorb hinzugefügt");
+    } catch (error) {
+      console.error("Fehler beim Hinzufügen zum Warenkorb:", error);
+    }
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -16,7 +33,7 @@ const ProductDetails = () => {
         <Text style={styles.star}>{item.stars}</Text>
         <Text style={styles.reviews}>({item.reviews} Bewertungen)</Text>
         <Text style={styles.description}>{item.description}</Text>
-        <Button title="Zurück zur Hauptseite" onPress={() => navigation.goBack()} />
+        <Button title="Zum Warenkorb hinzufügen" onPress={() => addToShoppingCart(item)} />
       </View>
     </ScrollView>
   );
