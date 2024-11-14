@@ -1,26 +1,101 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Button, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, StyleSheet, ScrollView, Button, Alert, TextInput } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as ImagePicker from 'expo-image-picker';
 
 const ProductDetails = () => {
-  const route = useRoute(); // Zugriff auf die Route, um die übergebene Produktdaten zu erhalten
+  const route = useRoute();
   const navigation = useNavigation();
-  const { item } = route.params; // Produktdaten, die von der MainPage übergeben wurden. Parameter
+  const { item } = route.params;
+
+  const [name, setName] = useState('');
+  const [reviewText, setReviewText] = useState('');
+  const [stars, setStars] = useState('');
+  const [imageBase64, setImageBase64] = useState(null);
+  const [userMadeReviews, setUserMadeReviews] = useState([]);
+
+  // Load reviews from AsyncStorage when component mounts
+  useEffect(() => {
+    loadReviews();
+  }, []);
+
+  async function loadReviews() {
+    try {
+      const storedReviews = await AsyncStorage.getItem(`reviews_${item.id}`);
+      if (storedReviews) {
+        setUserMadeReviews(JSON.parse(storedReviews));
+      }
+    } catch (error) {
+      console.error("Error loading reviews:", error);
+    }
+  }
 
   async function addToShoppingCart(item) {
     try {
-      // Der bisherige Warenkorb
       const jsonCart = await AsyncStorage.getItem('shoppingCart');
       let cartItems = jsonCart != null ? JSON.parse(jsonCart) : [];
 
-      // Hinzufügen zum JSON
       cartItems.push(item);
       await AsyncStorage.setItem('shoppingCart', JSON.stringify(cartItems));
 
       Alert.alert("Hinzugefügt", "Das Produkt wurde dem Warenkorb hinzugefügt");
     } catch (error) {
       console.error("Fehler beim Hinzufügen zum Warenkorb:", error);
+    }
+  }
+
+  async function addReview() {
+    if (!name || !reviewText || !stars) {
+      Alert.alert("Fehler", "Bitte alle Felder ausfüllen");
+      return;
+    }
+
+    const newReview = {
+      name,
+      text: reviewText,
+      stars,
+      image: imageBase64,
+    };
+
+    const updatedReviews = [...userMadeReviews, newReview];
+    setUserMadeReviews(updatedReviews);
+
+    try {
+      await AsyncStorage.setItem(`reviews_${item.id}`, JSON.stringify(updatedReviews));
+      setName('');
+      setReviewText('');
+      setStars('');
+      setImageBase64(null);
+      Alert.alert("Erfolg", "Ihre Bewertung wurde gespeichert");
+    } catch (error) {
+      console.error("Fehler beim Speichern der Bewertung:", error);
+    }
+  }
+
+  // Function to pick an image from library and convert it to base64
+  async function pickImageFromLibrary() {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      base64: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImageBase64(result.assets[0].base64);
+    }
+  }
+
+  // Function to take a photo with the camera and convert it to base64
+  async function takePhoto() {
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      base64: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImageBase64(result.assets[0].base64);
     }
   }
 
@@ -34,6 +109,46 @@ const ProductDetails = () => {
         <Text style={styles.reviews}>({item.reviews} Bewertungen)</Text>
         <Text style={styles.description}>{item.description}</Text>
         <Button title="Zum Warenkorb hinzufügen" onPress={() => addToShoppingCart(item)} />
+
+        <Text style={styles.reviewsHeader}>Create your review:</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Name"
+          value={name}
+          onChangeText={setName}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Review"
+          value={reviewText}
+          onChangeText={setReviewText}
+          multiline
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Stars (1-5)"
+          value={stars}
+          onChangeText={setStars}
+          keyboardType="numeric"
+        />
+        <Button title="Pick an Image from Library" onPress={pickImageFromLibrary} />
+        <Button title="Take a Photo" onPress={takePhoto} />
+        {imageBase64 && <Image source={{ uri: `data:image/png;base64,${imageBase64}` }} style={styles.reviewImage} />}
+        <Button title="Submit Review" onPress={addReview} />
+
+        <Text style={styles.reviewsHeader}>Reviews:</Text>
+        {userMadeReviews && userMadeReviews.length > 0 ? (
+          userMadeReviews.map((review, index) => (
+            <View key={index} style={styles.reviewContainer}>
+              <Text style={styles.reviewText}>{review.name}</Text>
+              <Text style={styles.reviewStars}>{review.stars} stars</Text>
+              <Text style={styles.reviewText}>{review.text}</Text>
+              {review.image && <Image source={{ uri: `data:image/png;base64,${review.image}` }} style={styles.reviewImage} />}
+            </View>
+          ))
+        ) : (
+          <Text style={styles.noReviewsText}>No reviews available</Text>
+        )}
       </View>
     </ScrollView>
   );
@@ -79,6 +194,46 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
     marginBottom: 16,
+  },
+  reviewsHeader: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  reviewContainer: {
+    marginBottom: 16,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    padding: 8,
+    borderRadius: 8,
+  },
+  reviewStars: {
+    fontSize: 16,
+    color: '#FFD700',
+    marginBottom: 4,
+  },
+  reviewText: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 4,
+  },
+  reviewImage: {
+    width: '100%',
+    height: 500,
+    resizeMode: 'contain',
+    marginVertical: 8,
+  },
+  input: {
+    borderColor: '#ddd',
+    borderWidth: 1,
+    padding: 8,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  noReviewsText: {
+    fontSize: 14,
+    color: '#666',
   },
 });
 
