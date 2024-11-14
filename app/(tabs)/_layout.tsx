@@ -4,6 +4,7 @@ import {
   TextInput,
   Button,
   Image,
+  Text,
   TouchableOpacity,
   StyleSheet,
   Platform,
@@ -12,19 +13,21 @@ import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from '@react-navigation/native'; // Importiere den Navigation Hook
 
 export default function TaskList() {
   const [searchQuery, setSearchQuery] = useState("");
+  const navigation = useNavigation();
+
+ 
+  const handlePress = () => {
+    navigation.navigate('LoginPage');
+    console.log("es geit irgendwie nid")
+  };
+
 
   const handleSearchChange = (text) => {
     setSearchQuery(text);
-  };
-
-  const navigation = useNavigation();
-
-  const loginHandler = () => {
-    navigation.navigate('LoginPage');
   };
 
 
@@ -55,10 +58,11 @@ export default function TaskList() {
         </View>
 
           {/* Grün: Login Button */}
-        <TouchableOpacity style={styles.loginButton}>
           <Button
-            title="Login" onPress={() => console.log('Navigate to login page')} />
-        </TouchableOpacity>
+            title="Login"
+            onPress={handlePress}
+            style={styles.loginButton}
+          />
 
          {/* Rot: Warenkorb Icon */}
         <TouchableOpacity style={styles.iconContainer}>
