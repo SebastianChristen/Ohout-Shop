@@ -2,18 +2,14 @@ import React, { useState } from "react";
 import {
   View,
   TextInput,
-  Button,
   Image,
-  Text,
   TouchableOpacity,
   StyleSheet,
-  Platform,
+  Text,
 } from "react-native";
-import { Tabs } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import { Colors } from "@/constants/Colors";
-import { useNavigation } from '@react-navigation/native'; // Importiere den Navigation Hook
 
 export default function TaskList() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -32,11 +28,15 @@ export default function TaskList() {
     navigation.navigate('index');
   };
 
+  const router = useRouter(); 
 
   const handleSearchChange = (text) => {
     setSearchQuery(text);
   };
 
+  const loginHandler = () => {
+    router.push("/LoginPage");
+  };
 
   const handleSearchSubmit = () => {
     console.log("Suchanfrage:", searchQuery);
@@ -55,7 +55,7 @@ export default function TaskList() {
           </View>
         </TouchableOpacity>
 
-        {/* Blau: Suchleiste */}
+        {/* Suchleiste */}
         <View style={styles.searchContainer}>
           <TextInput
             style={styles.searchBar}
@@ -66,14 +66,20 @@ export default function TaskList() {
           />
         </View>
 
-          {/* Grün: Login Button */}
-          <Button
-            title="Login"
-            onPress={handlePress}
-            style={styles.loginButton}
-          />
+        {/* Login Button */}
+        <TouchableOpacity
+          style={[
+            styles.loginButton,
+            { backgroundColor: "blue", padding: 10, borderRadius: 8 },
+          ]}
+          onPress={loginHandler}
+        >
+          <Text style={{ color: "white", fontWeight: "bold", fontSize: 16 }}>
+            Login
+          </Text>
+        </TouchableOpacity>
 
-         {/* Rot: Warenkorb Icon */}
+        {/* Warenkorb Icon */}
         <TouchableOpacity style={styles.iconContainer} onPress={handleCartPress}>
           <Ionicons name="cart" size={24} color="black" />
         </TouchableOpacity>
@@ -117,7 +123,8 @@ export default function TaskList() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 120},
+    paddingTop: 120,
+  },
   header: {
     paddingTop: 20,
     flexDirection: "row",
