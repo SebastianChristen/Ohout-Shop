@@ -22,7 +22,14 @@ export default function TaskList() {
  
   const handlePress = () => {
     navigation.navigate('LoginPage');
-    console.log("es geit irgendwie nid")
+  };
+
+  const handleCartPress = () => {
+    navigation.navigate('shoppingcart');
+  };
+
+  const handleLogoPress = () => {
+    navigation.navigate('index');
   };
 
 
@@ -39,12 +46,14 @@ export default function TaskList() {
     <View style={styles.container}>
       <View style={styles.header}>
         {/* Gelb: Logo */}
-        <View style={styles.imageContainer}>
-          <Image
-            source={require("../../assets/images/Ohout Logo.png")}
-            style={styles.image}
-          />
-        </View>
+        <TouchableOpacity onPress={handleLogoPress}>
+          <View style={styles.imageContainer}>
+            <Image
+              source={require("../../assets/images/Ohout Logo.png")}
+              style={styles.image}
+            />
+          </View>
+        </TouchableOpacity>
 
         {/* Blau: Suchleiste */}
         <View style={styles.searchContainer}>
@@ -65,7 +74,7 @@ export default function TaskList() {
           />
 
          {/* Rot: Warenkorb Icon */}
-        <TouchableOpacity style={styles.iconContainer}>
+        <TouchableOpacity style={styles.iconContainer} onPress={handleCartPress}>
           <Ionicons name="cart" size={24} color="black" />
         </TouchableOpacity>
       </View>
