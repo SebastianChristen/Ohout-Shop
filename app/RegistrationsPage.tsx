@@ -1,28 +1,23 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
-import { useRouter } from "expo-router";
+import { useRouter } from 'expo-router';
 
-
-const LoginPage = () => {
+const RegistrationPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const navigation = useNavigation();
   const router = useRouter();
 
-  // Überprüft, ob die E-Mail-Adresse gültig ist
-  const isValidEmail = (email) => {
+  const isValidEmail = (email: string) => {
     return email.includes('@');
   };
-  
-  const loginHandler = () => {
-    router.push("RegistrationsPage");
-  };
 
-  // Login des Benutzers
-  const handleLogin = async () => {
+  const backToHome = () => {
+    router.push("index");
+  }
+
+  const handleRegister = async () => {
     if (email === '' || password === '') {
       setErrorMessage('Bitte fülle alle Felder aus!');
       return;
@@ -34,34 +29,31 @@ const LoginPage = () => {
     }
 
     try {
-      const user = await AsyncStorage.getItem('user');
-
-      if (user === null) {
-        setErrorMessage('Keine Benutzerdaten gefunden. Bitte registriere dich zuerst.');
+      const existingUser = await AsyncStorage.getItem('user');
+      if (existingUser) {
+        setErrorMessage('Benutzer bereits registriert!');
         return;
       }
 
-      const parsedUser = JSON.parse(user);
+      const user = { email, password };
+      await AsyncStorage.setItem('user', JSON.stringify(user));
 
-      if (parsedUser && parsedUser.email === email && parsedUser.password === password) {
-        navigation.navigate('Home');
-      } else {
-        setErrorMessage('Ungültige Anmeldedaten!');
-      }
+      Alert.alert('Erfolg', 'Registrierung abgeschlossen!');
+      router.push('index');
     } catch (error) {
       console.error(error);
-      setErrorMessage('Fehler beim Abrufen der Daten');
+      setErrorMessage('Fehler beim Speichern der Daten');
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Registrierung</Text>
 
       {/* Fehlernachricht */}
       {errorMessage !== '' && <Text style={styles.error}>{errorMessage}</Text>}
 
-      {/* Eingabefelder */}
+      {/* Falsche eingabe */}
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -76,19 +68,18 @@ const LoginPage = () => {
         onChangeText={setPassword}
       />
 
-      {/* Login Button */}
-      <Button title="Login" onPress={handleLogin} />
+      {/* Registrieren Button */}
+      <Button title="Registrieren" onPress={handleRegister} />
 
-      {/* Registrierung Button */}
-      <Button title="Jetzt registrieren" onPress={loginHandler} />
-
-
-      {/* Alternative Registrierungsmöglichkeit */}
+      {/* Zurück zur Login Page */}
       <Text style={styles.registerText}>
-        Noch keinen Account?{' '}
-        <Text style={styles.registerLink} onPress={loginHandler}>
-          Registrieren
-        </Text>
+        Schon registriert?{' '}
+        <Button
+          style={styles.registerLink}
+          onPress={backToHome}
+        >
+          Anmelden
+        </Button>
       </Text>
     </View>
   );
@@ -129,4 +120,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginPage;
+export default RegistrationPage;

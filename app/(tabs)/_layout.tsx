@@ -2,31 +2,26 @@ import React, { useState } from "react";
 import {
   View,
   TextInput,
-  Button,
   Image,
   TouchableOpacity,
   StyleSheet,
-  Platform,
+  Text,
 } from "react-native";
-import { Tabs } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import { Colors } from "@/constants/Colors";
-import { useNavigation } from "@react-navigation/native";
 
 export default function TaskList() {
   const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter(); 
 
   const handleSearchChange = (text) => {
     setSearchQuery(text);
   };
 
-  const navigation = useNavigation();
-
   const loginHandler = () => {
-    navigation.navigate('LoginPage');
+    router.push("/LoginPage");
   };
-
 
   const handleSearchSubmit = () => {
     console.log("Suchanfrage:", searchQuery);
@@ -35,7 +30,7 @@ export default function TaskList() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        {/* Gelb: Logo */}
+        {/* Logo */}
         <View style={styles.imageContainer}>
           <Image
             source={require("../../assets/images/Ohout Logo.png")}
@@ -43,7 +38,7 @@ export default function TaskList() {
           />
         </View>
 
-        {/* Blau: Suchleiste */}
+        {/* Suchleiste */}
         <View style={styles.searchContainer}>
           <TextInput
             style={styles.searchBar}
@@ -54,13 +49,20 @@ export default function TaskList() {
           />
         </View>
 
-          {/* Grün: Login Button */}
-        <TouchableOpacity style={styles.loginButton}>
-          <Button
-            title="Login" onPress={() => console.log('Navigate to login page')} />
+        {/* Login Button */}
+        <TouchableOpacity
+          style={[
+            styles.loginButton,
+            { backgroundColor: "blue", padding: 10, borderRadius: 8 },
+          ]}
+          onPress={loginHandler}
+        >
+          <Text style={{ color: "white", fontWeight: "bold", fontSize: 16 }}>
+            Login
+          </Text>
         </TouchableOpacity>
 
-         {/* Rot: Warenkorb Icon */}
+        {/* Warenkorb Icon */}
         <TouchableOpacity style={styles.iconContainer}>
           <Ionicons name="cart" size={24} color="black" />
         </TouchableOpacity>
@@ -104,7 +106,8 @@ export default function TaskList() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 120},
+    paddingTop: 120,
+  },
   header: {
     paddingTop: 20,
     flexDirection: "row",
