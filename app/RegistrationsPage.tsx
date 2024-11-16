@@ -2,19 +2,21 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 
 const RegistrationPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
+  const navigation = useNavigation(); // Navigation Hook
 
   const isValidEmail = (email: string) => {
     return email.includes('@');
   };
 
   const backToHome = () => {
-    router.push("index");
+    navigation.navigate("index");
   }
 
   const handleRegister = async () => {

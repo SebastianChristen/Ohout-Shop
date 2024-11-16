@@ -10,9 +10,11 @@ import {
 import { Tabs, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
+import { useNavigation } from "@react-navigation/native";
+import { useSearch } from "./SearchContext";
 
 export default function TaskList() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const { searchQuery, setSearchQuery } = useSearch();
   const navigation = useNavigation();
 
  
@@ -61,7 +63,6 @@ export default function TaskList() {
             style={styles.searchBar}
             value={searchQuery}
             onChangeText={handleSearchChange}
-            onSubmitEditing={handleSearchSubmit}
             placeholder="Suche"
           />
         </View>
@@ -89,6 +90,7 @@ export default function TaskList() {
       <Tabs
         screenOptions={{
           headerShown: false,
+          tabBarStyle: { display: 'none' }, // This hides the tabs
         }}
       >
         <Tabs.Screen

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Image, FlatList, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; // Importiere den Navigation Hook
+import { useSearch } from './SearchContext'; // Import the context
 
 const data = [
   { id: '1', image: require('../../assets/images/regenschirm.jpg'), title: 'Gelber Regenschirm', types: ['Wetterschutz'], price: 27, stars: "★★★★☆", reviews: 139, description: "Gelber Regenschirm, um den Regen abzuhalten. Am besten zu benutzen an Regentagen." },
@@ -19,6 +20,15 @@ const MainPage = () => {
     navigation.navigate('ProductDetails', { item });
   };
 
+  const { searchQuery } = useSearch(); // Hier ist jetzt die Suchfunktion
+
+  // Filter the data
+  const filteredData = data.filter(
+    item =>
+      item.title.toLowerCase().includes(searchQuery.toLowerCase()) || // Search in the title
+      item.types.some(type => type.toLowerCase().includes(searchQuery.toLowerCase())) // Search in the types
+  );
+
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => handlePress(item)} style={styles.itemContainer}>
       <Image source={item.image} style={styles.image} />
@@ -33,7 +43,7 @@ const MainPage = () => {
 
   return (
     <FlatList
-      data={data}
+      data={filteredData}
       renderItem={renderItem}
       keyExtractor={item => item.id}
       numColumns={1}
