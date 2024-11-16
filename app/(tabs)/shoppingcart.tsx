@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, FlatList, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 
 const ShoppingCart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -105,9 +106,15 @@ const ShoppingCart = () => {
           <FlatList
             data={cartItems}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => String(item.id)} // Stelle sicher, dass item.id ein String ist
           />
-          <Text style={styles.totalText}>Gesamtsumme: €{totalPrice.toFixed(2)}</Text>
+          <View>
+            <Text style={styles.totalText}>Gesamtsumme: €{totalPrice.toFixed(2)}</Text>
+            <Button
+              title="Zum Checkout"
+              onPress={() => router.push("CheckoutPage")} // Richtige Syntax
+            />
+          </View>
         </>
       ) : (
         <Text style={styles.emptyText}>Der Warenkorb ist leer.</Text>
