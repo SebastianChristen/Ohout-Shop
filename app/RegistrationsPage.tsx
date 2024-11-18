@@ -16,7 +16,7 @@ const RegistrationPage = () => {
   };
 
   const backToHome = () => {
-    navigation.navigate("index");
+    navigation.navigate("");
   }
 
   const handleRegister = async () => {

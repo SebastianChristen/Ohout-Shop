@@ -225,7 +225,7 @@ const MainPage = () => {
   };
 
   const handlePress = (item) => {
-    navigation.navigate('ProductDetails', { item });
+    navigation.navigate('productDetails', { item });
   };
 
   const filteredData = data.filter(

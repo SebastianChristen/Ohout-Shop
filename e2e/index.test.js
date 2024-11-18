@@ -42,6 +42,6 @@ describe('MainPage', () => {
     
     fireEvent.press(item);
 
-    expect(mockNavigate).toHaveBeenCalledWith('ProductDetails', { item: expect.any(Object) });
+    expect(mockNavigate).toHaveBeenCalledWith('productDetails', { item: expect.any(Object) });
   });
 });

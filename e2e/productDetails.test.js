@@ -28,7 +28,7 @@ it('should display item details correctly', () => {
 });
 
 
-describe('ProductDetails', () => {
+describe('productDetails', () => {
   const mockItem = {
     id: '1',
     title: 'Test Product',

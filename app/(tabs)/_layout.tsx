@@ -17,11 +17,6 @@ export default function TaskList() {
   const { searchQuery, setSearchQuery } = useSearch();
   const navigation = useNavigation();
 
- 
-  const handlePress = () => {
-    navigation.navigate('LoginPage');
-  };
-
   const handleCartPress = () => {
     navigation.navigate('shoppingcart');
   };
@@ -37,7 +32,7 @@ export default function TaskList() {
   };
 
   const loginHandler = () => {
-    router.push("/LoginPage");
+    router.push("/loginPage");
   };
 
   const handleSearchSubmit = () => {
@@ -100,18 +95,6 @@ export default function TaskList() {
             tabBarIcon: ({ color, focused }) => (
               <TabBarIcon
                 name={focused ? "home" : "home-outline"}
-                color={color}
-              />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="explore"
-          options={{
-            title: "Explore",
-            tabBarIcon: ({ color, focused }) => (
-              <TabBarIcon
-                name={focused ? "code-slash" : "code-slash-outline"}
                 color={color}
               />
             ),

@@ -73,7 +73,7 @@ describe('ShoppingCart', () => {
     fireEvent.press(checkoutButton);
 
     await waitFor(() => {
-      expect(require('expo-router').router.push).toHaveBeenCalledWith('CheckoutPage');
+      expect(require('expo-router').router.push).toHaveBeenCalledWith('checkoutPage');
     });
   });
 });
