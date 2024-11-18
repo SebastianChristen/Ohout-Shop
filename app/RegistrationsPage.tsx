@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
@@ -74,15 +74,13 @@ const RegistrationPage = () => {
       <Button title="Registrieren" onPress={handleRegister} />
 
       {/* Zurück zur Login Page */}
-      <Text style={styles.registerText}>
-        Schon registriert?{' '}
-        <Button
-          style={styles.registerLink}
-          onPress={backToHome}
-        >
-          Anmelden
-        </Button>
-      </Text>
+      <View style={styles.registerText}>
+        <Text>Schon registriert? </Text>
+        <TouchableOpacity onPress={() => router.push("/loginPage")}>
+          <Text style={styles.registerLink}>Anmelden</Text>
+        </TouchableOpacity>
+      </View>
+
     </View>
   );
 };
