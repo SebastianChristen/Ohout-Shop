@@ -9,7 +9,7 @@ const RegistrationPage = () => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
-  const navigation = useNavigation(); // Navigation Hook
+  const navigation = useNavigation();
 
   const isValidEmail = (email: string) => {
     return email.includes('@');

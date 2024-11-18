@@ -83,7 +83,7 @@ const LoginPage = () => {
       <Button title="Jetzt registrieren" onPress={loginHandler} />
 
 
-      {/* Alternative Registrierungsmöglichkeit */}
+      {/* zweite Registration */}
       <Text style={styles.registerText}>
         Noch keinen Account?{' '}
         <Text style={styles.registerLink} onPress={loginHandler}>

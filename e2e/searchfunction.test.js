@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import TaskList from '../path/to/TaskList';
-import { SearchProvider } from '../path/to/SearchContext'; // Importiere den Suchkontext
+import { SearchProvider } from '../path/to/SearchContext'; 
 
 describe('TaskList - SearchBar', () => {
   it('should render the search bar with initial value', () => {
@@ -12,7 +12,7 @@ describe('TaskList - SearchBar', () => {
     );
 
     const searchBar = getByPlaceholderText('Suche');
-    expect(searchBar.props.value).toBe(''); // Standardwert
+    expect(searchBar.props.value).toBe('');
   });
 
   it('should update searchQuery on text input', () => {
@@ -24,7 +24,7 @@ describe('TaskList - SearchBar', () => {
 
     const searchBar = getByPlaceholderText('Suche');
     fireEvent.changeText(searchBar, 'Testsuche');
-    expect(searchBar.props.value).toBe('Testsuche'); // Aktualisierter Wert
+    expect(searchBar.props.value).toBe('Testsuche');
   });
 
   it('should log search query on search submit', () => {
@@ -37,7 +37,7 @@ describe('TaskList - SearchBar', () => {
 
     const searchBar = getByPlaceholderText('Suche');
     fireEvent.changeText(searchBar, 'Testsuche');
-    fireEvent(searchBar, 'submitEditing'); // Simuliert das Abschicken der Suche
+    fireEvent(searchBar, 'submitEditing'); 
 
     expect(consoleSpy).toHaveBeenCalledWith('Suchanfrage:', 'Testsuche');
     consoleSpy.mockRestore();

@@ -73,7 +73,6 @@ const ProductDetails = () => {
     }
   }
 
-  // Function to pick an image from library and convert it to base64
   async function pickImageFromLibrary() {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -86,7 +85,6 @@ const ProductDetails = () => {
     }
   }
 
-  // Function to take a photo with the camera and convert it to base64
   async function takePhoto() {
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,

@@ -11,7 +11,6 @@ const ShoppingCart = () => {
     loadCartItems();
   }, []);
 
-  // Lade Warenkorb-Elemente aus dem AsyncStorage
   async function loadCartItems() {
     try {
       const jsonCart = await AsyncStorage.getItem('shoppingCart');
@@ -24,19 +23,16 @@ const ShoppingCart = () => {
     }
   }
 
-  // Speichere Warenkorb-Elemente im AsyncStorage
   async function saveCartItems(items) {
     try {
       const jsonCart = JSON.stringify(items.flatMap((item) => 
-        Array(item.quantity).fill({ ...item, quantity: undefined }) // Menge entfernen, um Originalformat wiederherzustellen
+        Array(item.quantity).fill({ ...item, quantity: undefined })
       ));
       await AsyncStorage.setItem('shoppingCart', jsonCart);
     } catch (error) {
       console.error("Fehler beim Speichern des Warenkorbs:", error);
     }
   }
-
-  // Gruppiere Artikel mit derselben ID
   const groupItemsById = (items) => {
     const grouped = items.reduce((acc, item) => {
       const existingItem = acc.find((i) => i.id === item.id);
@@ -50,13 +46,11 @@ const ShoppingCart = () => {
     return grouped;
   };
 
-  // Berechne die Gesamtsumme
   const calculateTotalPrice = (items) => {
     const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
     setTotalPrice(total);
   };
 
-  // Erhöhe die Anzahl eines Artikels
   const incrementQuantity = (id) => {
     const updatedItems = cartItems.map((item) =>
       item.id === id ? { ...item, quantity: item.quantity + 1 } : item
@@ -66,19 +60,17 @@ const ShoppingCart = () => {
     saveCartItems(updatedItems);
   };
 
-  // Verringere die Anzahl eines Artikels
   const decrementQuantity = (id) => {
     const updatedItems = cartItems
       .map((item) =>
         item.id === id ? { ...item, quantity: item.quantity - 1 } : item
       )
-      .filter((item) => item.quantity > 0); // Entferne Artikel mit 0 Menge
+      .filter((item) => item.quantity > 0); 
     setCartItems(updatedItems);
     calculateTotalPrice(updatedItems);
     saveCartItems(updatedItems);
   };
 
-  // Hier wird das jeweilige einzelne Item erstellt
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
       <Image source={item.image} style={styles.image} />
@@ -106,13 +98,13 @@ const ShoppingCart = () => {
           <FlatList
             data={cartItems}
             renderItem={renderItem}
-            keyExtractor={(item) => String(item.id)} // Stelle sicher, dass item.id ein String ist
+            keyExtractor={(item) => String(item.id)}
           />
           <View>
             <Text style={styles.totalText}>Gesamtsumme: €{totalPrice.toFixed(2)}</Text>
             <Button
               title="Zum Checkout"
-              onPress={() => router.push("CheckoutPage")} // Richtige Syntax
+              onPress={() => router.push("CheckoutPage")} 
             />
           </View>
         </>

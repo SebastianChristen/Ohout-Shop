@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { View, Text, Image, FlatList, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native"; // Importiere den Navigation Hook
-import { useSearch } from "./SearchContext"; // Import the context
-import AsyncStorage from "@react-native-async-storage/async-storage"; // Für AsyncStorage
+import { useNavigation } from "@react-navigation/native";
+import { useSearch } from "./SearchContext"; 
+import AsyncStorage from "@react-native-async-storage/async-storage"; 
 
 const data = [
   {
@@ -195,10 +195,10 @@ const data = [
 ];
 
 const MainPage = () => {
-  const navigation = useNavigation(); // Navigation Hook
-  const { searchQuery } = useSearch(); // Hier ist jetzt die Suchfunktion
+  const navigation = useNavigation();
+  const { searchQuery } = useSearch(); 
 
-  // Store the initial reviews in AsyncStorage
+
   useEffect(() => {
     initializeReviews();
   }, []);
@@ -209,7 +209,6 @@ const MainPage = () => {
         const storedReviews = await AsyncStorage.getItem(`reviews_${product.id}`);
         let existingReviews = storedReviews ? JSON.parse(storedReviews) : [];
   
-        // Merge existing reviews with the initial userReviews, avoiding duplicates
         const updatedReviews = [...existingReviews, ...product.userReviews.filter(
           (newReview) => !existingReviews.some((existingReview) =>
             existingReview.name === newReview.name &&
@@ -225,16 +224,14 @@ const MainPage = () => {
     }
   };
 
-  // Weiterleiten zur Produktdetail-Seite. Gibt jeweils das gesamte Produkt mit.
   const handlePress = (item) => {
     navigation.navigate('ProductDetails', { item });
   };
 
-  // Filter the data
   const filteredData = data.filter(
     item =>
-      item.title.toLowerCase().includes(searchQuery.toLowerCase()) || // Search in the title
-      item.types.some(type => type.toLowerCase().includes(searchQuery.toLowerCase())) // Search in the types
+      item.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      item.types.some(type => type.toLowerCase().includes(searchQuery.toLowerCase())) 
   );
 
   const renderItem = ({ item }) => (
@@ -260,7 +257,6 @@ const MainPage = () => {
   );
 };
 
-// Hier alles CSS
 const styles = StyleSheet.create({
   listContainer: {
     padding: 10,
@@ -276,7 +272,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  // Die Bilder. Die Höhe ist nicht ganz 100%, so dass mehrere Items Platz haben.
   image: {
     width: '100%',
     height: Dimensions.get('window').width / 1.5,

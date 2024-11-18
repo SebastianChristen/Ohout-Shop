@@ -47,7 +47,7 @@ export default function TaskList() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        {/* Gelb: Logo */}
+        {/* Logo */}
         <TouchableOpacity onPress={handleLogoPress}>
           <View style={styles.imageContainer}>
             <Image
