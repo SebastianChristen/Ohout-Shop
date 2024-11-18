@@ -104,7 +104,7 @@ const ShoppingCart = () => {
             <Text style={styles.totalText}>Gesamtsumme: €{totalPrice.toFixed(2)}</Text>
             <Button
               title="Zum Checkout"
-              onPress={() => router.push("CheckoutPage")} 
+              onPress={() => router.push("checkoutPage")} 
             />
           </View>
         </>
