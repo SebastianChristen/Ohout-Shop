@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
   },
   noReviewsText: {
     fontSize: 14,
-    color: '#666',
+    color: '#777',
   },
 });
 
