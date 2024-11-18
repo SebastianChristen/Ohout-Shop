@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   TextInput,
@@ -6,23 +6,34 @@ import {
   TouchableOpacity,
   StyleSheet,
   Text,
+  Alert,
 } from "react-native";
 import { Tabs, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { useNavigation } from "@react-navigation/native";
 import { useSearch } from "./SearchContext";
 
 export default function TaskList() {
   const { searchQuery, setSearchQuery } = useSearch();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const user = await AsyncStorage.getItem("user");
+      setIsLoggedIn(!!user);
+    };
+    checkLoginStatus();
+  }, []);
 
   const handleCartPress = () => {
     navigation.navigate('shoppingcart');
   };
 
   const handleLogoPress = () => {
-    navigation.navigate('index');
+    navigation.navigate('');
   };
 
   const router = useRouter(); 
@@ -31,12 +42,17 @@ export default function TaskList() {
     setSearchQuery(text);
   };
 
-  const loginHandler = () => {
-    router.push("/loginPage");
-  };
-
   const handleSearchSubmit = () => {
     console.log("Suchanfrage:", searchQuery);
+  };
+
+  const loginHandler = () => {
+    if (isLoggedIn) {
+      setIsLoggedIn(false);
+      Alert.alert("Abgemeldet", "Du wurdest erfolgreich abgemeldet.");
+    } else {
+      router.push("/loginPage");
+    }
   };
 
   return (
@@ -71,7 +87,7 @@ export default function TaskList() {
           onPress={loginHandler}
         >
           <Text style={{ color: "white", fontWeight: "bold", fontSize: 16 }}>
-            Login
+            {isLoggedIn ? "Logout" : "Login"}
           </Text>
         </TouchableOpacity>
 

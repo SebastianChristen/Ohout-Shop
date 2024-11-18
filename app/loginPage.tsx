@@ -44,7 +44,7 @@ const LoginPage = () => {
       const parsedUser = JSON.parse(user);
 
       if (parsedUser && parsedUser.email === email && parsedUser.password === password) {
-        navigation.navigate('Home');
+        router.push("")
       } else {
         setErrorMessage('Ungültige Anmeldedaten!');
       }

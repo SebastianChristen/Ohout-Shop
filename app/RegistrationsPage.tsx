@@ -41,7 +41,7 @@ const RegistrationPage = () => {
       await AsyncStorage.setItem('user', JSON.stringify(user));
 
       Alert.alert('Erfolg', 'Registrierung abgeschlossen!');
-      router.push('index');
+      router.push('');
     } catch (error) {
       console.error(error);
       setErrorMessage('Fehler beim Speichern der Daten');
