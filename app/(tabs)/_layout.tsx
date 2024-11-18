@@ -33,7 +33,7 @@ export default function TaskList() {
   };
 
   const handleLogoPress = () => {
-    navigation.navigate('');
+    router.push('');
   };
 
   const router = useRouter(); 
